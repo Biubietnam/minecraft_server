@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  mc-server:
+    stdin_open: true
+    tty: true
+    build:
+      context: .               # Assumes Dockerfile is in the current directory
+      dockerfile: Dockerfile  # Optional if named 'Dockerfile'
+    container_name: hired-server
+    ports:
+      - "25565:25565"          # Minecraft Java port
+      # - "25575:25575"          # RCON or admin port
+      # - "19132:19132/udp"      # Bedrock port (if using GeyserMC or similar)
+      # - "8082:8082"
+      # - "24454:24454/udp"          # Optional port for plugins or web interfaces
+    volumes:
+      - ./world:/minecraft/world
+      # - ./world_nether:/minecraft/world_nether
+      # - ./world_the_end:/minecraft/world_the_end
+      # - ./plugins:/minecraft/plugins
+      - ./server.properties:/minecraft/server.properties
+      - ./ops.json:/minecraft/ops.json
+      - ./whitelist.json:/minecraft/whitelist.json
+      - ./banned-players.json:/minecraft/banned-players.json
+      - ./banned-ips.json:/minecraft/banned-ips.json
+    deploy:
+      resources:
+        limits:
+          memory: 20g
+    restart: unless-stopped
